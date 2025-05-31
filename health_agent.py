@@ -4,6 +4,8 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, AIMessage
 from dotenv import load_dotenv
+import shutil
+terminal_width = shutil.get_terminal_size().columns
 
 load_dotenv()
 
@@ -26,12 +28,8 @@ def agent_node(state: AgentState) -> AgentState:
     - To end the conversation, user can say "exit_conversation".
     """)
     
-    if not state["messages"]:
-        user_input = "I am ready to help you with your health, How can I help you?"
-        user_message = HumanMessage(content=user_input)
-    else:
-        user_input = input("\nHow would you like me to help you? ")
-        user_message = HumanMessage(content=user_input)
+    user_input = input("\nHow would you like me to help you? ")
+    user_message = HumanMessage(content=user_input)
 
     all_messages = [system_prompt] + list(state["messages"]) + [user_message]
     response = llm.invoke(all_messages)
@@ -70,21 +68,23 @@ def print_messages(messages):
     if not messages:
         return
 
-    for message in messages[-3:]:
+    # print("debug", messages)
+    for message in messages[-2:]:
         if isinstance(message, AIMessage):
-            print(f"\nAssistant: {message.content}")
+            print(f"\n🤖 Agent: {message.content}")
         elif isinstance(message, HumanMessage):
-            print(f"\nUser: {message.content}")
+            user_message = f"👤 User: {message.content}"
+            print(f"\n{user_message.rjust(terminal_width)}")
+
 
 
 def run_agent():
     print("\n === HEALTH COACH AGENT ===")
-
-    state = {"messages": []}
+    greeting = AIMessage(content="I am ready to help you with your health")
+    state = {"messages": [greeting]}
 
     for step in agent.stream(state, stream_mode="values"):
         if "messages" in step:
-            # print(step["messages"])
             print_messages(step["messages"])
 
     print("\n === HEALTH COACH AGENT FINISHED ===")
