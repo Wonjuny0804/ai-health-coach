@@ -20,3 +20,5 @@ This is an attempt to make our own AI health coach using langgraph and langchain
 - Coach should be able to check in with the user and ask if they are following the plan and if they are making progress. 
 - Coach should be able to look for real world data and new scientific studies if the coach doesn't have enough information to give a personalized plan. 
 - Coach should be able to write articles and share it with the user to help them understand their health and fitness journey. 
+
+
