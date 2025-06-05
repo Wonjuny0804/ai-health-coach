@@ -1,4 +1,46 @@
+# Environment variables and virtual environments
 .env
 .venv/
+venv/
+env/
+ENV/
 
-__pycache__
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+.idea/
+
+# Project specific
+history.txt
+logs/
+*.log
+
+# Mac OS specific
+.DS_Store
+
+# Local Supabase config
+.supabase/
