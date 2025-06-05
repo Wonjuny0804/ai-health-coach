@@ -46,9 +46,10 @@ def should_continue(state: AgentState) -> str:
     if not messages:
         return "continue"
 
-    for message in reversed(messages):
-        if (isinstance(message, HumanMessage) and "exit_conversation" in message.content.lower()):
-            return "end"
+    # check if the last message is exit_conversation
+    last_message = messages[-1]
+    if isinstance(last_message, HumanMessage) and "exit_conversation" in last_message.content.lower():
+        return "end"
 
     return "continue"
 
