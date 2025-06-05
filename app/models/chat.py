@@ -12,8 +12,7 @@ class Message(BaseModel):
     content: str
     created_at: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class ChatSession(BaseModel):
@@ -24,8 +23,7 @@ class ChatSession(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     last_activity_at: datetime = Field(default_factory=datetime.now)
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class ChatHistory(BaseModel):

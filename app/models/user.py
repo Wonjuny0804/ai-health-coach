@@ -12,8 +12,7 @@ class User(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.now)
     is_active: bool = True
     
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class UserProfile(BaseModel):
@@ -27,14 +26,13 @@ class UserProfile(BaseModel):
     weight_kg: Optional[float] = None
     fitness_goals: List[str] = Field(default_factory=list)
     dietary_preferences: List[str] = Field(default_factory=list)
-    health_conditions: List[str] = Field(default_factory=list)
+    # health fields removed (health_conditions)
     activity_level: Optional[str] = None  # sedentary, light, moderate, active, very active
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     metadata: Dict[str, Any] = Field(default_factory=dict)
-
-    class Config:
-        from_attributes = True
+    
+    model_config = {"from_attributes": True}
 
 
 class UserCreate(BaseModel):
@@ -52,7 +50,7 @@ class UserProfileCreate(BaseModel):
     weight_kg: Optional[float] = None
     fitness_goals: List[str] = Field(default_factory=list)
     dietary_preferences: List[str] = Field(default_factory=list)
-    health_conditions: List[str] = Field(default_factory=list)
+    # health fields removed (health_conditions)
     activity_level: Optional[str] = None
 
 
@@ -65,6 +63,6 @@ class UserProfileUpdate(BaseModel):
     weight_kg: Optional[float] = None
     fitness_goals: Optional[List[str]] = None
     dietary_preferences: Optional[List[str]] = None
-    health_conditions: Optional[List[str]] = None
+    # health fields removed
     activity_level: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
