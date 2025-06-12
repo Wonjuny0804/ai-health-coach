@@ -15,9 +15,7 @@ from app.models.chat import (
     MessageCreate,
     Message,
     ChatHistory,
-    ChatSessionUpdate
 )
-from app.core.health_agent import process_message
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 

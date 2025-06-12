@@ -44,3 +44,14 @@ logs/
 
 # Local Supabase config
 .supabase/
+
+# Expo
+.expo
+.expo/
+
+# node_modules
+node_modules
+node_modules/
+
+
+tasks/

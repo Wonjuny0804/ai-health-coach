@@ -1,12 +1,10 @@
 from typing import Annotated, Sequence, TypedDict, Any
 from operator import add as add_messages
-import asyncio
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, AIMessage
-from langchain_core.messages.utils import count_tokens_approximately
 from dotenv import load_dotenv
-import uuid
+from app.core.supabase import supabase
 
 # Import locally for CLI version
 try:
@@ -105,29 +103,6 @@ def load_history(filename="history.txt"):
         return messages
     except FileNotFoundError:
         return []
-
-# Function to process messages from the API
-async def process_message(user_input: str, session_id: uuid.UUID = None) -> str:
-    """Process a message from the API and return the AI response"""
-    # Create system prompt
-    system_prompt = """
-    You are a helpful health coach assistant. Users will ask you questions about their health and fitness.
-    You will answer their questions in a helpful and concise way. 
-
-    - Always try to know what is their main goal for a workout before giving a workout plan.
-    - If user asks about a specific workout, try to give a workout plan that matches their goal.
-    - If user asks about a diet plan, try to give a diet plan that matches their goal.
-    - Always stick to the topic of the conversation which is health and fitness.
-    """
-    
-    # Create the messages for the AI
-    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_input)]
-    
-    # Get response from the AI
-    response = await asyncio.to_thread(llm.invoke, messages)
-    
-    # Return the response content
-    return response.content
 
 
 def run_agent():
