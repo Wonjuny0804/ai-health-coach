@@ -100,4 +100,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Next.js build output
+.next/
+**/.next/
 frontend/.next/
