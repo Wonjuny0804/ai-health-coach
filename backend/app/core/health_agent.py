@@ -4,7 +4,6 @@ from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, AIMessage
 from dotenv import load_dotenv
-from app.core.supabase import supabase
 
 # Import locally for CLI version
 try:
