@@ -24,6 +24,7 @@ export default function SignIn() {
         email,
         password,
       });
+      console.log('LOGIN::')
       
       if (error) {
         setError(error.message);
@@ -31,7 +32,7 @@ export default function SignIn() {
       }
       
       // Successful login - redirect to dashboard or home page
-      router.push('/');
+      router.push('/dashboard');
       router.refresh();
     } catch (err) {
       console.error('Login error:', err);
