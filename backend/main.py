@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.chat import router as chat_router
+from app.api.onboarding import router as onboarding_router
 
 app = FastAPI(
     title="AI Health Coach API",
@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(chat_router)
+app.include_router(onboarding_router, prefix="/api")
 
 @app.get("/")
 def read_root():
