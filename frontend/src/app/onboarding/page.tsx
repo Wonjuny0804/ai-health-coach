@@ -1,187 +1,88 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Send, Mic } from 'lucide-react';
+import React from 'react';
 
-type Message = {
-  id: string;
-  content: string;
-  role: 'user' | 'assistant';
-  timestamp: Date;
-};
-
-const Onboarding = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: 'Hi there! I\'m your AI health coach. I\'ll help you set up your profile. Let\'s start with your name.',
-      role: 'assistant',
-      timestamp: new Date(),
-    },
-  ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom of messages
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // Mock function to simulate AI responses
-  const mockAIResponse = async (userMessage: string): Promise<string> => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Simple mock responses based on user input
-    if (userMessage.toLowerCase().includes('name')) {
-      return 'Great! Now, can you tell me your fitness goals?';
-    } else if (userMessage.toLowerCase().includes('goal') || userMessage.toLowerCase().includes('fitness')) {
-      return 'Excellent! How would you describe your current activity level?';
-    } else if (userMessage.toLowerCase().includes('activity') || userMessage.toLowerCase().includes('level')) {
-      return 'Thanks! What about your dietary preferences?';
-    } else if (userMessage.toLowerCase().includes('diet') || userMessage.toLowerCase().includes('food')) {
-      return 'Perfect! I\'ve created your profile. I\'ll now redirect you to your dashboard where you can start your health journey!';
-    } else {
-      return 'Tell me more about your health and fitness goals so I can customize your experience.';
-    }
-  };
-
-  // Mock function to create user profile
-  const createUserProfile = async (messages: Message[]) => {
-    // In a real implementation, this would call a backend API
-    console.log('Creating user profile based on chat:', messages);
-    return { success: true };
-  };
-
-  // Mock function to redirect to dashboard
-  const redirectToDashboard = () => {
-    // In a real implementation, this would redirect to the dashboard
-    console.log('Redirecting to dashboard...');
-    // window.location.href = '/dashboard';
-  };
-
-  const handleSendMessage = async () => {
-    if (!input.trim()) return;
-
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: input,
-      role: 'user',
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
-
-    try {
-      // Get AI response
-      const aiResponse = await mockAIResponse(input);
-      
-      // Add AI message
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: aiResponse,
-        role: 'assistant',
-        timestamp: new Date(),
-      };
-
-      setMessages(prev => [...prev, aiMessage]);
-
-      // Check if this is the last step in the onboarding process
-      if (aiResponse.includes('redirect you to your dashboard')) {
-        await createUserProfile(messages);
-        // Add slight delay before redirect for user to read the message
-        setTimeout(redirectToDashboard, 3000);
-      }
-    } catch (error) {
-      console.error('Error getting AI response:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const OnboardingPage = () => {
+  // Generic steps for the onboarding process
+  const steps = [
+    { id: 1, name: 'Basic Information', completed: true, current: false },
+    { id: 2, name: 'Health Goals', completed: false, current: true },
+    { id: 3, name: 'Lifestyle Assessment', completed: false, current: false },
+    { id: 4, name: 'Preferences', completed: false, current: false },
+    { id: 5, name: 'Review & Complete', completed: false, current: false },
+  ];
 
   return (
-    <div 
-      className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat p-4"
-      style={{ backgroundImage: "url('/images/onboarding-bg.jpg')" }}
-    >
-      {/* Chat History Container */}
-      <div className="w-[90%] max-w-3xl h-[70vh] bg-white/20 backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl border border-white/30 mb-4">
-        {/* Chat Container */}
-        <div className="flex-1 overflow-y-auto p-6 h-full space-y-5">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              {message.role === 'assistant' && (
-                <div className="h-10 w-10 rounded-full bg-emerald-500/70 mr-3 flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">Agent</span>
+    <div className="flex h-screen w-full overflow-hidden">
+      {/* Left sidebar with steps */}
+      <div className="w-1/4 bg-gray-900 text-white p-6 flex flex-col">
+        {/* Logo */}
+        <div className="mb-12">
+          <h3 className="text-white text-2xl font-bold flex items-center">
+            <span className="mr-2">■</span> Melian
+          </h3>
+        </div>
+        
+        {/* Steps */}
+        <div className="flex-grow">
+          <h4 className="text-gray-400 uppercase text-xs font-semibold tracking-wider mb-4">Onboarding Steps</h4>
+          <div className="space-y-6">
+            {steps.map((step) => (
+              <div key={step.id} className="flex items-center">
+                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mr-3 ${step.completed ? 'bg-green-500' : step.current ? 'bg-indigo-500' : 'bg-gray-700'}`}>
+                  {step.completed ? (
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  ) : (
+                    <span className="text-white text-sm">{step.id}</span>
+                  )}
                 </div>
-              )}
-              <div
-                className={`max-w-[70%] p-3.5 rounded-2xl ${message.role === 'user'
-                  ? 'bg-blue-600/90 backdrop-blur-sm text-white rounded-tr-none'
-                  : 'bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-tl-none'
-                  }`}
-              >
-                <p className="leading-relaxed">{message.content}</p>
-                <span className="text-xs opacity-70 block mt-2">
-                  {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                <span className={`text-sm ${step.current ? 'text-white font-medium' : 'text-gray-300'}`}>
+                  {step.name}
                 </span>
               </div>
-              {message.role === 'user' && (
-                <div className="h-10 w-10 rounded-full bg-blue-500/70 ml-3 flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">You</span>
-                </div>
-              )}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
+            ))}
+          </div>
+        </div>
+        
+        {/* Company branding at the bottom */}
+        <div className="mt-auto">
+          <p className="text-gray-400 text-xs">© Melian Health 2025</p>
         </div>
       </div>
 
-      {/* Message Input - Separated from chat history */}
-      <div className="w-[85%] max-w-2xl bg-white/25 backdrop-blur-lg rounded-full overflow-hidden shadow-xl border border-white/30">
-        <div className="flex items-center px-3 py-1">
-          <div className="flex-1 relative">
-            <Input
-              placeholder="Type your message..."
-              value={input}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
-              onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleSendMessage()}
-              disabled={isLoading}
-              className="w-full bg-transparent border-0 text-white placeholder-white/70 py-3 px-3 focus:outline-none"
-            />
-            <Button 
-              variant="outline"
-              size="icon"
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 hover:bg-white/20 text-white"
-            >
-              <Mic className="h-5 w-5 opacity-70" />
-            </Button>
+      {/* Main content area */}
+      <div className="w-3/4 bg-white">
+        <div className="max-w-3xl mx-auto p-10">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">Health Goals</h1>
+            <p className="text-gray-500 mt-2">Tell us about your health goals and what you hope to achieve.</p>
           </div>
-          <Button 
-            onClick={handleSendMessage} 
-            disabled={isLoading || !input.trim()}
-            className="rounded-full h-12 w-12 bg-blue-600/90 hover:bg-blue-700 text-white flex items-center justify-center"
-            size="icon"
-          >
-            <Send className="h-5 w-5" />
-          </Button>
+          
+          {/* Placeholder content */}
+          <div className="bg-gray-100 rounded-lg p-8 flex flex-col items-center justify-center min-h-[400px] border border-dashed border-gray-300">
+            <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+            </svg>
+            <p className="text-gray-500 text-center mb-2">Onboarding Step Content</p>
+            <p className="text-sm text-gray-400 text-center">This is a placeholder for the main onboarding content</p>
+          </div>
+          
+          {/* Navigation buttons */}
+          <div className="flex justify-between mt-10">
+            <button className="px-6 py-3 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+              Back
+            </button>
+            <button className="px-6 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors">
+              Continue
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Onboarding;
+export default OnboardingPage;
