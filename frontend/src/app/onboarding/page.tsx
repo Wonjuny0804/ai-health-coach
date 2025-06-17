@@ -1,24 +1,117 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import useOnboarding from '@/hooks/useOnboarding';
+
+const mockData = {
+  "sessionId": "abc",
+  "status": "question",
+  "currentStepId": "display_name",
+  "steps": [
+      {
+          "id": "display_name",
+          "title": "Display name",
+          "answer": null,
+          "status": "current"
+      },
+      {
+          "id": "birthday",
+          "title": "Birthday",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "sex",
+          "title": "Sex / gender",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "height",
+          "title": "Height",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "training_experience",
+          "title": "Experience",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "training_style",
+          "title": "Training style",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "equipment",
+          "title": "Equipment",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "availability",
+          "title": "Availability",
+          "answer": null,
+          "status": "upcoming"
+      },
+      {
+          "id": "limitations",
+          "title": "Limitations",
+          "answer": null,
+          "status": "upcoming"
+      }
+  ],
+  "payload": {
+      "kind": "text",
+      "id": "display_name",
+      "prompt": "What would you like us to call you?",
+      "placeholder": "Enter a display name",
+      "required": true,
+      "minLen": 2,
+      "maxLen": 40
+  },
+  "paraphrasedAnswers": {}
+}
 
 const OnboardingPage = () => {
   // Generic steps for the onboarding process
-  const steps = [
-    { id: 1, name: 'Basic Information', completed: true, current: false },
-    { id: 2, name: 'Health Goals', completed: false, current: true },
-    { id: 3, name: 'Lifestyle Assessment', completed: false, current: false },
-    { id: 4, name: 'Preferences', completed: false, current: false },
-    { id: 5, name: 'Review & Complete', completed: false, current: false },
-  ];
+  const data = useOnboarding() || mockData;
+  console.log(data);
+
+  const steps = data.steps;
+  const payload = data.payload;
+
+
+  const [inputValue, setInputValue] = useState('');
+
+
+  // const handleSubmit = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:8000/api/onboarding/chat', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         message: inputValue,
+  //       }),
+  //     });
+  //     const { data } = await response.json();
+
+  //   } catch(error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Left sidebar with steps */}
-      <div className="w-1/4 bg-gray-900 text-white p-6 flex flex-col">
+      <div className="w-1/4 bg-white text-white p-6 flex flex-col">
         {/* Logo */}
         <div className="mb-12">
-          <h3 className="text-white text-2xl font-bold flex items-center">
+          <h3 className="text-black text-2xl font-bold flex items-center">
             <span className="mr-2">■</span> Melian
           </h3>
         </div>
@@ -26,23 +119,37 @@ const OnboardingPage = () => {
         {/* Steps */}
         <div className="flex-grow">
           <h4 className="text-gray-400 uppercase text-xs font-semibold tracking-wider mb-4">Onboarding Steps</h4>
-          <div className="space-y-6">
-            {steps.map((step) => (
-              <div key={step.id} className="flex items-center">
-                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mr-3 ${step.completed ? 'bg-green-500' : step.current ? 'bg-indigo-500' : 'bg-gray-700'}`}>
-                  {step.completed ? (
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
+          <div className="relative">
+            {/* Steps */}
+            <div className="space-y-5 relative z-10">
+              {steps.map((step) => (
+                <div key={step.id} className="flex items-center">
+                  {/* Step indicator */}
+                  {step.status === 'done' ? (
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center mr-3">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                  ) : step.status === 'current' ? (
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full border-2 border-blue-500 flex items-center justify-center mr-3">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                    </div>
                   ) : (
-                    <span className="text-white text-sm">{step.id}</span>
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full border border-gray-500 flex items-center justify-center mr-3">
+                    </div>
                   )}
+                  
+                  <span className={`text-sm ${
+                    step.status === 'done' ? 'text-gray-300' : 
+                    step.status === 'current' ? 'text-blue-500 font-medium' : 
+                    'text-gray-400'
+                  }`}>
+                    {step.title}
+                  </span>
                 </div>
-                <span className={`text-sm ${step.current ? 'text-white font-medium' : 'text-gray-300'}`}>
-                  {step.name}
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
         
@@ -53,32 +160,17 @@ const OnboardingPage = () => {
       </div>
 
       {/* Main content area */}
-      <div className="w-3/4 bg-white">
-        <div className="max-w-3xl mx-auto p-10">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Health Goals</h1>
-            <p className="text-gray-500 mt-2">Tell us about your health goals and what you hope to achieve.</p>
-          </div>
-          
-          {/* Placeholder content */}
-          <div className="bg-gray-100 rounded-lg p-8 flex flex-col items-center justify-center min-h-[400px] border border-dashed border-gray-300">
-            <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-            </svg>
-            <p className="text-gray-500 text-center mb-2">Onboarding Step Content</p>
-            <p className="text-sm text-gray-400 text-center">This is a placeholder for the main onboarding content</p>
-          </div>
-          
-          {/* Navigation buttons */}
-          <div className="flex justify-between mt-10">
-            <button className="px-6 py-3 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
-              Back
-            </button>
-            <button className="px-6 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors">
-              Continue
-            </button>
-          </div>
+      <div className="w-3/4 bg-white flex items-center justify-center">
+        <div className="max-w-3xl mx-auto p-10 mb-20">
+          {/*  This is where the main content goes, using the payload from the API response */}
+          {/* Question */}
+          <h2 className="text-3xl text-black  font-bold mb-4">{payload.prompt}</h2>
+          {/* Input */}
+          <input type="text" className="w-full p-2 border border-gray-300 rounded text-black" onChange={(e) => { setInputValue(e.target.value) }} />
+          {/* Button */}
+          <button 
+          className="w-full p-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 transition-colors disabled:bg-gray-400"
+          disabled={true} onClick={() => {}}>Submit</button>
         </div>
       </div>
     </div>
