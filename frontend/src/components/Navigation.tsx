@@ -6,32 +6,39 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 lg:px-8 py-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 lg:px-8 py-4 bg-white">
       <div className="max-w-7xl mx-auto">
-        {/* Glassmorphic container */}
-        <div className="bg-white/20 backdrop-blur-lg rounded-xl shadow-lg 
-                      border border-white/30 p-4 flex justify-between items-center">
+        <div className="flex justify-between items-center">
           
           {/* Logo */}
-          <div className="font-bold text-xl text-white">Melian</div>
+          <div className="font-bold text-xl">FLOWSYNC</div>
           
           {/* Desktop Navigation - Only visible on md and above */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/services" className="text-white/90 hover:text-white transition-colors">
-              Services
+            <Link href="/features" className="text-gray-700 hover:text-gray-900 transition-colors">
+              Features
             </Link>
-            <Link href="/about" className="text-white/90 hover:text-white transition-colors">
-              About Us
+            <Link href="/about" className="text-gray-700 hover:text-gray-900 transition-colors">
+              About us
             </Link>
-            <Link href="/login" className="px-4 py-2 bg-white/20 text-white rounded-lg 
-                                          hover:bg-white/30 transition-colors border border-white/30">
-              Login with your account
+            <Link href="/pricing" className="text-gray-700 hover:text-gray-900 transition-colors">
+              Pricing
+            </Link>
+            <Link href="/functionalities" className="text-gray-700 hover:text-gray-900 transition-colors">
+              Functionalities
+            </Link>
+            <Link href="/integration" className="text-gray-700 hover:text-gray-900 transition-colors">
+              Integration
+            </Link>
+            <Link href="/signup" className="ml-4 px-6 py-2 bg-purple-800 text-white rounded-lg 
+                                          hover:bg-purple-900 transition-colors">
+              Try it for free
             </Link>
           </div>
           
           {/* Mobile burger menu button - Only visible on smaller screens */}
           <button 
-            className="md:hidden text-white"
+            className="md:hidden text-gray-800"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? (
@@ -48,18 +55,26 @@ const Navigation = () => {
         
         {/* Mobile Navigation - Dropdown for mobile */}
         {isOpen && (
-          <div className="md:hidden mt-2 bg-white/20 backdrop-blur-lg rounded-xl shadow-lg 
-                        border border-white/30 p-4">
-            <div className="flex flex-col space-y-4">
-              <Link href="/services" className="text-white/90 hover:text-white transition-colors text-center py-2">
-                Services
+          <div className="md:hidden mt-2 bg-white shadow-lg rounded-lg">
+            <div className="flex flex-col space-y-4 p-4">
+              <Link href="/features" className="text-gray-700 hover:text-gray-900 transition-colors text-center py-2">
+                Features
               </Link>
-              <Link href="/about" className="text-white/90 hover:text-white transition-colors text-center py-2">
-                About Us
+              <Link href="/about" className="text-gray-700 hover:text-gray-900 transition-colors text-center py-2">
+                About us
               </Link>
-              <Link href="/login" className="px-4 py-2 bg-white/20 text-white rounded-lg 
-                                          hover:bg-white/30 transition-colors border border-white/30 text-center">
-                Login with your account
+              <Link href="/pricing" className="text-gray-700 hover:text-gray-900 transition-colors text-center py-2">
+                Pricing
+              </Link>
+              <Link href="/functionalities" className="text-gray-700 hover:text-gray-900 transition-colors text-center py-2">
+                Functionalities
+              </Link>
+              <Link href="/integration" className="text-gray-700 hover:text-gray-900 transition-colors text-center py-2">
+                Integration
+              </Link>
+              <Link href="/signup" className="px-6 py-2 bg-purple-800 text-white rounded-lg 
+                                            hover:bg-purple-900 transition-colors text-center">
+                Try it for free
               </Link>
             </div>
           </div>

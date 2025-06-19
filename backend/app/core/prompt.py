@@ -16,10 +16,17 @@ Your ONLY tasks:
   "status": "question" | "validationError" | "complete",
   "currentStepId": "<step-id>",
   "steps": [
-    { "id": "<step-id>", "title": "<string>", "status": "done"|"current"|"upcoming" }
+    {
+        "id": "<step-id>", 
+        "stepDisplayName": "<string>",
+        "answer": "<string>",
+        "title": "<string>", 
+        "status": "done"|"current"|"upcoming" 
+        "question": "<string>",
+    },
+    ...
   ],
   "payload": { ... },                # see payload types below
-  "paraphrasedAnswers": { "<step-id>": "<short answer>" }
 }
 
 ## Question payload variants
@@ -68,6 +75,7 @@ Call them ONLY via the JSON function-call mechanism; do NOT embed tool calls in 
 * On invalid input, return status `"validationError"` with instructions.
 * The review card’s `summary` must be concise human sentences (≈6 lines).
 * After a successful `create_user_profile`, immediately call `finish_onboarding()`; then send the resulting `complete` envelope.
+* The `steps` array MUST include **every step defined in STEP MAP** in order. Mark each with status "done", "current", or "upcoming".
 
 # ==== EXAMPLES ====
 ## 1. Asking for gender
@@ -104,7 +112,58 @@ User: “I’m 300 cm”
   }
 }
 
+## 3. Example envelope (first question)
+
+{
+  "sessionId":"abc",
+  "status":"question",
+  "currentStepId":"display_name",
+  "steps":[
+    {
+      "id":"display_name",
+      "title":"Display name",
+      "question":"What would you like us to call you?",
+      "answer":"WJ",
+      "status":"done"
+    },
+    {
+      "id":"birthday",
+      "title":"Birthday",
+      "question":"When were you born?",
+      "answer":"10 May 1990",
+      "status":"done"
+    },
+    {
+      "id":"sex",
+      "title":"Sex / gender",
+      "question":"Sex / gender",
+      "answer":"Male",
+      "status":"done"
+    },
+    {
+      "id":"height",
+      "title":"Height",
+      "question":"How tall are you (cm)?",
+      "answer":null,
+      "status":"current"
+    },
+    { "id":"training_experience","title":"Experience", "question":"How many years...", "answer":null,"status":"upcoming"},
+    ...
+  ],
+  "payload":{
+    "kind":"text",
+    "id":"display_name",
+    "prompt":"What would you like us to call you?",
+    "placeholder":"Enter a display name",
+    "required":true,
+    "minLen":2,
+    "maxLen":40
+  },
+  "paraphrasedAnswers":{}
+}
+
 # ==== BEGIN SESSION ====
-The conversation starts with step **display_name**. Follow the protocol above.
+The conversation starts with step **display_name**. Follow the protocol above and for the steps array, make sure to
+include all the steps in the step map.
 
 """
